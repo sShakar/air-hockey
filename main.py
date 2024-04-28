@@ -38,13 +38,13 @@ puck_x, puck_y = WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2
 puck_dx, puck_dy = PUCK_SPEED, PUCK_SPEED
 
 # Main game loop
-while True:
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+            running = False
 
-    # Movement logic for paddles (keys W, S for Player 1 and Up, Down for Player 2)
+    # Movement logic for paddles
     keys = pygame.key.get_pressed()
     if keys[K_w] and paddle1_y > 0:
         paddle1_y -= PADDLE_SPEED
@@ -63,10 +63,14 @@ while True:
     if puck_y - PUCK_RADIUS <= 0 or puck_y + PUCK_RADIUS >= WINDOW_HEIGHT:
         puck_dy *= -1
 
+    # Check if puck goes out of bounds
+    if puck_x - PUCK_RADIUS <= 0 or puck_x + PUCK_RADIUS >= WINDOW_WIDTH:
+        running = False  # Stop the game if the puck goes out of bounds
+
     # Collision with paddles
-    if puck_x - PUCK_RADIUS <= PADDLE_WIDTH + PADDLE_BUFFER and paddle1_y < puck_y < paddle1_y + PADDLE_HEIGHT:
+    if puck_x - PUCK_RADIUS <= PADDLE_WIDTH + PADDLE_BUFFER and paddle1_y <= puck_y <= paddle1_y + PADDLE_HEIGHT:
         puck_dx *= -1
-    if puck_x + PUCK_RADIUS >= WINDOW_WIDTH - (PADDLE_WIDTH + PADDLE_BUFFER) and paddle2_y < puck_y < paddle2_y + PADDLE_HEIGHT:
+    if puck_x + PUCK_RADIUS >= WINDOW_WIDTH - PADDLE_WIDTH - PADDLE_BUFFER and paddle2_y <= puck_y <= paddle2_y + PADDLE_HEIGHT:
         puck_dx *= -1
 
     # Clear screen
@@ -80,3 +84,7 @@ while True:
     # Update display and tick
     pygame.display.update()
     fpsClock.tick(FPS)
+
+# Quit the game
+pygame.quit()
+sys.exit()
