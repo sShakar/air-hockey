@@ -67,8 +67,8 @@ def text_objects(text, color, size):
 
 def pause():
     paused = True
-    message_to_screen("Paused", black, -100, size="large")
-    message_to_screen("Press c to continue , q to quit", black, 25)
+    message_to_screen("Paused", white, -100, size="large")
+    message_to_screen("Press c to continue , q to quit", white, 25)
     pygame.display.update()
     while paused:
         for event in pygame.event.get():
